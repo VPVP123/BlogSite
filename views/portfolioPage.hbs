@@ -1,0 +1,58 @@
+ {{#if isLoggedIn}}
+<form action="" method="POST" class="form" enctype="multipart/form-data">
+  <h1>Create Portfoliopost</h1>
+  <label for="title">Title:</label><br>
+  <input type="text" placeholder="EnterTitle..." id="title" name="title" columns="3"><br>
+  <label for="lname">Description:</label><br>
+  <textarea type="text" id="textField" placeholder="EnterDescription..." name="textField"></textarea><br>
+  <input type="file" name="imgInput">
+<input type="submit" value="Submit">
+{{#if validationErrors.length}}
+    <h3 style="color:white">Could not login:</h3>
+    <ul>
+        {{#each validationErrors}}
+        <li style="color:red;">{{this}}</li>
+        {{/each}}
+    </ul>
+{{/if}}
+</form>
+{{/if}}
+<h1>Portfolio</h1>
+
+<style>
+  .portfolioButton{
+    border-bottom: 10px solid #292929;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(../background2.jpg);
+    overflow: hidden;
+  }
+</style>
+
+  {{#each portfolioPost}}
+  <div class="post">
+    <div class="imgArea">
+    <img src="/images/{{img}}">
+  </div>
+    <div class="titleArea">
+      <h1>{{title}}</h1>
+    </div>
+    <div class="textArea">
+      <h2>{{postText}}</h2>
+    </div>
+     {{#if ../isLoggedIn}}
+    <div class="infoArea">
+      <div class="infoButtonEdit">
+        <form action="/editPortfolio/{{id}}" method="GET">
+          <input type="submit" value="Edit">
+        </form>
+      </div>
+      <div class="infoButtonDelete">
+        <form action="/deletePortfolio/{{id}}" method="POST">
+          <input type="submit" value="Delete">
+        </form>
+      </div>
+    </div>
+    {{/if}}
+  </div>
+  {{/each}}

@@ -1,0 +1,53 @@
+
+
+<form action="" method="POST" class="form">
+  <h1>Create Guestpost</h1>
+  <label for="title">Name:</label><br>
+  <input type="text" placeholder="EnterName..." id="title" name="title" columns="3"><br>
+  <label for="lname">Message:</label><br>
+  <textarea type="text" id="textField" placeholder="EnterMessage..." name="textField"></textarea><br>
+  <input type="submit" value="Submit">
+  
+{{#if validationErrors.length}}
+    <h3 style="color:white">Could not post:</h3>
+    <ul>
+        {{#each validationErrors}}
+        <li style="color:red;">{{this}}</li>
+        {{/each}}
+    </ul>
+{{/if}}
+</form>
+<h1>Guestbook posts</h1>
+<style>
+  .guestBookButton{
+    border-bottom: 10px solid #292929;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(../background2.jpg);
+    overflow: hidden;
+  }
+</style>
+  {{#each guestPost}}
+  <div class="post">
+    <div class="titleArea">
+      <h1>{{title}}</h1>
+    </div>
+    <div class="textArea">
+      <h2>{{postText}}</h2>
+    </div>
+    {{#if ../isLoggedIn}}
+    <div class="infoArea">
+      <div class="infoButtonEdit">
+        <form action="/editGuest/{{id}}">
+          <input type="submit" value="Edit">
+        </form>
+      </div>
+      <div class="infoButtonDelete">
+        <form action="/deleteGuest/{{id}}" method="POST">
+          <input type="submit" value="Delete">
+        </form>
+      </div>
+    </div>
+    {{/if}}
+  </div>
+  {{/each}}

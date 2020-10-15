@@ -1,0 +1,39 @@
+<style>
+  .contactButton{
+    border-bottom: 10px solid #292929;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(../background2.jpg);
+    overflow: hidden;
+  }
+</style>
+
+{{#if isLoggedIn}}
+{{#if contact.length}}
+{{#each contact}}
+<form action="/editContact/{{id}}" method="POST" class="form">
+  <h1>Edit Contact</h1>
+  <label>Username/email:</label><br>
+  <input type="text" placeholder="EnterUsername/Email..." name="textField" columns="3" value="{{text}}"><br>
+  <label>link:</label><br>
+  <input type="text" name="linkField" value="{{link}}"><br>
+  <label>Logo:</label><br>
+  <input type="text" name="classField" value="{{class}}"><br>
+  
+  <input type="submit" value="Submit">
+  {{#if ../validationErrors.length}}
+    <h3 style="color:white">Could not update contact:</h3>
+    <ul>
+      {{#each ../validationErrors}}
+        <li style="color:red;">{{this}}</li>
+      {{/each}}
+    </ul>
+{{/if}}
+</form>
+{{/each}}
+{{else}}
+<h1>No contact with that ID</h1>
+{{/if}}
+{{else}}
+<h1>You need to be logged in to use this feature</h1>
+{{/if}}

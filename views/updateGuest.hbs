@@ -1,0 +1,36 @@
+<style>
+  .guestBookButton{
+    border-bottom: 10px solid #292929;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(../background2.jpg);
+    overflow: hidden;
+  }
+</style>
+
+{{#if isLoggedIn}}
+{{#if guestPost.length}}
+{{#each guestPost}}
+<form action="/editGuest/{{id}}" method="POST" class="form">
+  <h1>Edit Guestpost</h1>
+  <label for="title">Name:</label><br>
+  <input type="text" placeholder="EnterName..." id="title" name="title" columns="3" value="{{title}}"><br>
+  <label for="lname">Message:</label><br>
+  <textarea type="text" id="textField" placeholder="EnterMessage..." name="textField">{{postText}}</textarea><br>
+  <input type="submit" value="Submit">
+  {{#if ../validationErrors.length}}
+    <h3 style="color:white">Could not post:</h3>
+    <ul>
+      {{#each ../validationErrors}}
+        <li style="color:red;">{{this}}</li>
+      {{/each}}
+    </ul>
+{{/if}}
+</form>
+{{/each}}
+{{else}}
+<h1>No post with that ID</h1>
+{{/if}}
+{{else}}
+<h1>You need to be logged in to use this feature</h1>
+{{/if}}
