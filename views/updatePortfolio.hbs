@@ -11,7 +11,7 @@
 {{#if isLoggedIn}}
 {{#if portPost.length}}
 {{#each portPost}}
-<form action="/editPortfolio/{{id}}" method="POST" class="form" enctype="multipart/form-data">
+<form action="/editPortfolio/{{id}}/?_csrf={{../csrfToken}}" method="POST" class="form" enctype="multipart/form-data">
   <h1>Edit Portfoliopost</h1>
   <label for="title">Title:</label><br>
   <input type="text" placeholder="EnterTitle..." id="title" name="title" columns="3" value="{{title}}"><br>

@@ -7,6 +7,7 @@
   <label for="lname">Message:</label><br>
   <textarea type="text" id="textField" placeholder="EnterMessage..." name="textField"></textarea><br>
   <input type="submit" value="Submit">
+  <input type="hidden" name="_csrf" value={{csrfToken}}>
   
 {{#if validationErrors.length}}
     <h3 style="color:white">Could not post:</h3>
@@ -40,11 +41,13 @@
       <div class="infoButtonEdit">
         <form action="/editGuest/{{id}}">
           <input type="submit" value="Edit">
+          <input type="hidden" name="_csrf" value={{../csrfToken}}>
         </form>
       </div>
       <div class="infoButtonDelete">
         <form action="/deleteGuest/{{id}}" method="POST">
           <input type="submit" value="Delete">
+          <input type="hidden" name="_csrf" value={{../csrfToken}}>
         </form>
       </div>
     </div>

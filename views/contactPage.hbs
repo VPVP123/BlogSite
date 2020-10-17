@@ -29,6 +29,7 @@
   <input type="text" name="classField" placeholder="Facebook/linkedin/instagram..." value="{{class}}"><br>
   
   <input type="submit" value="Submit">
+  <input type="hidden" name="_csrf" value={{csrfToken}}>
   {{#if validationErrors.length}}
     <h3 style="color:white">Could not update contact:</h3>
     <ul>
@@ -48,11 +49,13 @@
     <div class="infoButtonEdit">
       <form action="/editContact/{{id}}">
         <input type="submit" value="Edit">
+        <input type="hidden" name="_csrf" value={{../csrfToken}}>
       </form>
     </div>
     <div class="infoButtonDelete">
       <form action="/deleteContact/{{id}}" method="POST">
         <input type="submit" value="Delete">
+        <input type="hidden" name="_csrf" value={{../csrfToken}}>
       </form>
     </div>
   {{/if}}

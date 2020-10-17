@@ -8,8 +8,8 @@ const db = new sqlite3.Database('database.db');
 const expressSession = require("express-session")
 const multer = require("multer");
 const session = require('express-session');
-const router = express.Router();
 const bcrypt = require("bcryptjs");
+var csrf = require('csurf')
 const SQLiteStore = require("connect-sqlite3")(expressSession)
 
 const MINIMUM_TEXT = 2
@@ -62,6 +62,8 @@ const storage = multer.diskStorage({
   }
 })
 
+const csrfProtection = csrf({cookie: false})
+const parseForm = bodyParser.urlencoded({extended: false})
 
 const upload =multer({
   storage: storage
@@ -91,7 +93,7 @@ app.get('/', function(request, response){
 })
 
 
-app.get('/Contact', function(request, response){
+app.get('/Contact', csrfProtection, function(request, response){
 
   const contactQuery = "SELECT * FROM contact ORDER BY id";
 
@@ -100,7 +102,8 @@ app.get('/Contact', function(request, response){
       console.log(error)
     }else{
       const model = {
-        contact
+        contact,
+        csrfToken: request.csrfToken
       }
       console.log(contact)
       response.render("contactPage.hbs", model)
@@ -111,7 +114,7 @@ app.get('/Contact', function(request, response){
 
 })
 
-app.get('/editContact/:id', function(request, response){
+app.get('/editContact/:id', csrfProtection, function(request, response){
 
   const id = request.params.id
   console.log(id)
@@ -123,7 +126,8 @@ app.get('/editContact/:id', function(request, response){
       console.log(error)
     }else{
       const model = {
-        contact
+        contact,
+        csrfToken: request.csrfToken
       }
       console.log(model)
       response.render("updateContact.hbs", model)
@@ -133,7 +137,7 @@ app.get('/editContact/:id', function(request, response){
 
 
 
-app.post('/Contact', function(request, response){
+app.post('/Contact', csrfProtection, parseForm, function(request, response){
   if(request.session.isLoggedIn){
     const text = request.body.textField
     const link = request.body.linkField
@@ -156,7 +160,8 @@ app.post('/Contact', function(request, response){
       }else{
         const model = {
           validationErrors,
-          contact
+          contact,
+          csrfToken: request.csrfToken()
         }
         response.render("contactPage.hbs", model)
     
@@ -183,7 +188,7 @@ app.post('/Contact', function(request, response){
 
 
 
-app.post('/editContact/:id', function(request, response){
+app.post('/editContact/:id', csrfProtection, parseForm, function(request, response){
   if(request.session.isLoggedIn){
     const text = request.body.textField
     const link = request.body.linkField
@@ -206,7 +211,8 @@ app.post('/editContact/:id', function(request, response){
         }else{
           const model = {
             validationErrors,
-            contact
+            contact,
+            csrfToken: request.csrfToken()
           }
           console.log(model)
           response.render("updateContact.hbs", model)
@@ -230,7 +236,7 @@ response.render("updateContact.hbs")
 })
 
 
-app.get('/Portfolio', function(request, response){
+app.get('/Portfolio', csrfProtection, function(request, response){
 
   const portfolioQuery = "SELECT * FROM portfolioPost ORDER BY id";
 
@@ -239,7 +245,8 @@ app.get('/Portfolio', function(request, response){
       console.log(error)
     }else{
       const model = {
-        portfolioPost
+        portfolioPost,
+        csrfToken: request.csrfToken()
       }
       response.render("portfolioPage.hbs", model)
   
@@ -254,7 +261,7 @@ app.get('/Portfolio', function(request, response){
 
 
 
-app.get('/editPortfolio/:id', function(request, response){
+app.get('/editPortfolio/:id', csrfProtection, function(request, response){
 
   const id = request.params.id
   console.log(id)
@@ -266,7 +273,8 @@ app.get('/editPortfolio/:id', function(request, response){
       console.log(error)
     }else{
       const model = {
-        portPost
+        portPost,
+        csrfToken: request.csrfToken
       }
       console.log(model)
       response.render("updatePortfolio.hbs", model)
@@ -275,7 +283,7 @@ app.get('/editPortfolio/:id', function(request, response){
 })
 
 
-app.post('/editPortfolio/:id', function(request, response){
+app.post('/editPortfolio/:id', csrfProtection, parseForm, function(request, response){
 if(request.session.isLoggedIn){
   upload(request, response, function(error){
     if(error){
@@ -307,7 +315,8 @@ if(request.session.isLoggedIn){
           }else{
               const model = {
                 validationErrors,
-                portPost
+                portPost,
+                csrfToken: request.csrfToken()
               }
               response.render("updatePortfolio.hbs", model)
           }
@@ -337,7 +346,7 @@ if(request.session.isLoggedIn){
 
 
 
-app.get('/editGuest/:id', function(request, response){
+app.get('/editGuest/:id', csrfProtection, function(request, response){
   const id = request.params.id
   selectPortQuery = "SELECT * FROM guestPost WHERE id==?"
 
@@ -346,7 +355,8 @@ app.get('/editGuest/:id', function(request, response){
       console.log(error)
     }else{
       const model = {
-        guestPost
+        guestPost,
+        csrfToken: request.csrfToken
       }
       console.log(model)
       response.render("updateGuest.hbs", model)
@@ -354,7 +364,7 @@ app.get('/editGuest/:id', function(request, response){
 });
 })
 
-app.post('/editGuest/:id', function(request, response){
+app.post('/editGuest/:id', csrfProtection, parseForm, function(request, response){
 if(request.session.isLoggedIn){
       const title = request.body.title
       const postText = request.body.textField
@@ -376,7 +386,8 @@ if(request.session.isLoggedIn){
           }else{
             const model = {
               validationErrors,
-              guestPost
+              guestPost,
+              csrfToken: request.csrfToken()
             }
             console.log(model)
             response.render("updateGuest.hbs", model)
@@ -398,7 +409,7 @@ if(request.session.isLoggedIn){
 }
 })
 
-app.post('/deleteGuest/:id', function(request, response){
+app.post('/deleteGuest/:id', csrfProtection, parseForm, function(request, response){
   if(request.session.isLoggedIn){
     const id = request.params.id
     console.log(id)
@@ -419,7 +430,7 @@ app.post('/deleteGuest/:id', function(request, response){
 })
 
 
-app.post('/deleteContact/:id', function(request, response){
+app.post('/deleteContact/:id', csrfProtection, parseForm, function(request, response){
   if(request.session.isLoggedIn){
     const id = request.params.id
     console.log(id)
@@ -443,7 +454,7 @@ app.post('/deleteContact/:id', function(request, response){
 
 
 
-app.post('/deletePortfolio/:id', function(request, response){
+app.post('/deletePortfolio/:id', csrfProtection, parseForm, function(request, response){
   if(request.session.isLoggedIn){
     const id = request.params.id
     console.log(id)
@@ -466,7 +477,7 @@ app.post('/deletePortfolio/:id', function(request, response){
 })
 
 
-app.post('/Portfolio', function(request, response){
+app.post('/Portfolio', csrfProtection, parseForm, function(request, response){
   if(request.session.isLoggedIn){
   upload(request, response, function(error){
     const title = request.body.title
@@ -499,7 +510,8 @@ app.post('/Portfolio', function(request, response){
           validationErrors,
           title,
           textField,
-          portfolioPost
+          portfolioPost,
+          csrfToken: request.csrfToken()
         }
         response.render("portfolioPage.hbs", model)
     
@@ -532,7 +544,7 @@ app.post('/Portfolio', function(request, response){
 
 
 
-app.get('/Guestbook', function(request, response){
+app.get('/Guestbook', csrfProtection, function(request, response){
 
   const guestQuery = "SELECT * FROM guestPost ORDER BY id";
 
@@ -541,7 +553,8 @@ app.get('/Guestbook', function(request, response){
       console.log(error)
     }else{
       const model = {
-        guestPost
+        guestPost,
+        csrfToken: request.csrfToken
       }
       response.render("guestBookPage.hbs", model)
   
@@ -551,8 +564,7 @@ app.get('/Guestbook', function(request, response){
 
 })
 
-app.post('/Guestbook', function(request, response){
-  if(request.session.isLoggedIn){
+app.post('/Guestbook', csrfProtection, parseForm, function(request, response){
   const title = request.body.title
   const textField = request.body.textField
 
@@ -579,7 +591,8 @@ app.post('/Guestbook', function(request, response){
           validationErrors,
           title,
           textField,
-          guestPost
+          guestPost,
+          csrfToken: request.csrfToken()
         }
         response.render("guestBookPage.hbs", model)
     
@@ -599,18 +612,12 @@ app.post('/Guestbook', function(request, response){
     });
   
   }
-}else{
-  response.redirect("/login")
-}
 })
 
 
-app.get('/Contact', function(request, response){
-  response.render("contactPage.hbs")
-})
 
-app.get('/Login', function(request, response){
-  response.render("login.hbs")
+app.get('/Login', csrfProtection, function(request, response){
+  response.render("login.hbs", {csrfToken: request.csrfToken})
 })
 
 
@@ -619,7 +626,7 @@ app.get('/Logout', function(request, response){
   response.redirect('/')
 })
 
-app.post('/Login', function(request, response){
+app.post('/Login', csrfProtection, parseForm, function(request, response){
   const enteredUsername = request.body.username
   const enteredPassword = request.body.password
   const validationErrors = []
@@ -640,14 +647,16 @@ if(enteredUsername && enteredPassword){
       console.log(enteredPassword)
       validationErrors.push("Wrong username/password")
       const model = {
-        validationErrors
+        validationErrors,
+        csrfToken: request.csrfToken()
       }
       response.render("login.hbs", model)
     }        
   }else{
     validationErrors.push("Wrong username/password")
     const model = {
-      validationErrors
+      validationErrors,
+      csrfToken: request.csrfToken()
     }
     response.render("login.hbs", model)
   }
@@ -656,7 +665,8 @@ if(enteredUsername && enteredPassword){
 }else{
   validationErrors.push("Please enter something in both username and password")
   const model = {
-    validationErrors
+    validationErrors,
+    csrfToken: request.csrfToken()
   }
   response.render("login.hbs", model)
 }
