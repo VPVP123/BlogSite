@@ -62,12 +62,14 @@ const storage = multer.diskStorage({
   }
 })
 
-const csrfProtection = csrf({cookie: false})
-const parseForm = bodyParser.urlencoded({extended: false})
-
 const upload =multer({
   storage: storage
 }).single('imgInput');
+
+function logBody(req, res, next) {
+  console.dir(req.body)
+  next()
+}
 
 
 app.use(bodyParser.urlencoded({
@@ -82,6 +84,10 @@ app.use(expressSession({
 
   })
 }))
+
+const csrfProtection = csrf({cookie: false})
+const parseForm = bodyParser.urlencoded({extended: false})
+
 
 app.use(function(request, response, next){
   response.locals.isLoggedIn = request.session.isLoggedIn
@@ -287,7 +293,6 @@ app.post('/editPortfolio/:id', csrfProtection, parseForm, function(request, resp
 if(request.session.isLoggedIn){
   upload(request, response, function(error){
     if(error){
-
     }else{
       console.log(request.file)
       var image

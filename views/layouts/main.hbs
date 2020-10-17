@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fontisto@v3.0.4/css/fontisto/fontisto.min.css">
     <title>Victor</title>
   </head>
@@ -10,13 +10,13 @@
     <div class="header">
         <div class="logo_container">
           <a href="/">
-            <img src="../vs_logo.png" width="150px" height="75px" class="logoImg">
+            <img src="../../vs_logo.png" width="150px" height="75px" class="logoImg">
           </a>
         </div>
         <ul class="nav">
-          <a href="../Portfolio" class="portfolioButton"><li>Portfolio</li></a>
-          <a href="../Guestbook" class="guestBookButton"><li>Guestbook</li></a>
-          <a href="../Contact" class="contactButton"><li>Contact</li></a>
+          <a href="../../Portfolio" class="portfolioButton"><li>Portfolio</li></a>
+          <a href="../../Guestbook" class="guestBookButton"><li>Guestbook</li></a>
+          <a href="../../Contact" class="contactButton"><li>Contact</li></a>
         </ul>
     </div>
         <div class="content">
@@ -26,15 +26,15 @@
           <div class="user_container">
           <ul class="login">
             {{#if isLoggedIn}}
-              <a href="/Logout"><li>LOGOUT</li></a>
+              <a href="../../Logout"><li>LOGOUT</li></a>
             {{else}}
-              <a href="/Login" class="loginButton"><li>LOGIN</li></a>
+              <a href="../../Login" class="loginButton"><li>LOGIN</li></a>
             {{/if}}
         </ul>
         {{#if isLoggedIn}}
           <a href="">
           <div class="profilePic">
-            <img src="../profilePic.png" class="profileImg">
+            <img src="../../profilePic.png" class="profileImg">
           </div>
           </a>
         {{/if}}
