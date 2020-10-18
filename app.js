@@ -66,11 +66,6 @@ const upload =multer({
   storage: storage
 }).single('imgInput');
 
-function logBody(req, res, next) {
-  console.dir(req.body)
-  next()
-}
-
 
 app.use(bodyParser.urlencoded({
   extended: false
@@ -241,6 +236,10 @@ response.render("updateContact.hbs")
 }
 })
 
+
+app.get('/About', function(request, response){
+  response.render("aboutPage.hbs")
+})
 
 app.get('/Portfolio', csrfProtection, function(request, response){
 
