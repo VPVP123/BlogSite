@@ -1,2 +1,2 @@
-# First-Portfolio
-My first portfolio created in HTML, CSS and Javascript. (Not currently up to date)
+# WebBlog type of website with CRUD operations
+My first real website created in HTML, CSS, Javascript and an SQL database.
